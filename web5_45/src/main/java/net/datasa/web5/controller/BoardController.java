@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datasa.web5.domain.dto.BoardDTO;
@@ -259,5 +261,15 @@ public class BoardController {
         }
         return "redirect:read?boardNum=" + replyDTO.getBoardNum();
     }
+    
+    @GetMapping("download")
+    //파일을 리턴시키는 방법으로 파일 다운로드x
+    public void download(@RequestParam("boardNum") Integer boardNum,
+    		HttpServletResponse response) {
+    		
+    	boardService.download(boardNum, uploadPath, response);
+    	
+    }
+    
 
 }

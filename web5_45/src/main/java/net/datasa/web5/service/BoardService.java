@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -349,4 +350,21 @@ public class BoardService {
         }
         replyRepository.delete(replyEntity);
     }
+
+	public void download(Integer boardNum, String uploadPath, HttpServletResponse response, BoardDTO boardDTO) {
+		//전달된 글 번호로 파일명 확인
+		BoardEntity boardEntity = boardRepository.findById(boardDTO.getBoardNum())
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
+		
+		//in(글자, byte), out(글, byte)
+		//response의 헤더에 파일정보 세팅
+		
+		
+		
+		//파일읽기
+		
+		//response를 통해서 출력
+		
+		
+	}
 }
