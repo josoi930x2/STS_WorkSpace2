@@ -1,7 +1,10 @@
 package net.datasa.web5.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,9 +16,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -351,20 +356,44 @@ public class BoardService {
         replyRepository.delete(replyEntity);
     }
 
-	public void download(Integer boardNum, String uploadPath, HttpServletResponse response, BoardDTO boardDTO) {
-		//전달된 글 번호로 파일명 확인
-		BoardEntity boardEntity = boardRepository.findById(boardDTO.getBoardNum())
+	public void download(Integer boardNum, String uploadPath, HttpServletResponse response) {
+		//전달된 글 번호로 글 정보 조회
+		BoardEntity boardEntity = boardRepository.findById(boardNum)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
 		
 		//in(글자, byte), out(글, byte)
-		//response의 헤더에 파일정보 세팅
+	
+		//원래의 파일명을 헤더 정보에 세팅
+		try {
+			response.setHeader("Content-Disposition", 
+					"attachment;filename=" 
+					+ URLEncoder.encode(boardEntity.getOriginalName(), "UTF-8"));
+		}
+		catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
+		//저장된 파일 경로
+		String fullPath = uploadPath + "/" + boardEntity.getFileName();
 		
+		//서버의 파일을 읽을 입력 스트림과 클라이언트에게 전달할 출력 스트림
+		FileInputStream filein = null;
+		ServletOutputStream fileout = null;
 		
-		//파일읽기
-		
-		//response를 통해서 출력
-		
+		try {
+			filein = new FileInputStream(fullPath); //서버의 파일과 프로그램
+			fileout = response.getOutputStream(); //프로그램과 클라이언트
+			
+			//Spring의 파일 관련 유틸 이용하여 출력
+			FileCopyUtils.copy(filein, fileout);
+			
+			//close하기 전까지 계속 전송 stream객체를 닫음
+			filein.close();
+			fileout.close();
+			
+		} catch (IOException e){
+			e.printStackTrace();
+		}
 		
 	}
 }
