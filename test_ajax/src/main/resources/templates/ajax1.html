@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<title>test_ajax</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/작성.css}" />
+	<script th:src="@{/js/jquery-3.7.1.min.js}"></script> 
+
+
+	<script>
+	function test1() {
+		alert ("test1 함수 실행됨");
+		
+		//서버로 비동기적인 요청
+		$.ajax({
+			//요청 경로(http://localhost:7778/ajaxtest1)
+			url : 'ajaxtest1',
+			type : 'get',
+			success : function() {
+				alert('success');
+			},
+			//예외가 발생하면 error
+			error : function() {
+				alert('error');
+			}
+		});
+		alert("test1 함수의 뒷부분");
+		
+	}
+	</script>
+
+</head>
+<body>
+
+	<h1>[ Ajax 테스트 1 ]</h1>
+	
+	<p><a href="javascript:test1()">서버로 요청보내기</a></p>
+	<p><a href=""></a></p>
+	<p><a href=""></a></p>
+	
+	<p><img th:src="@{/images/hamster.jpg}">이미지 타임리프</p>
+
+</body>
+</html>

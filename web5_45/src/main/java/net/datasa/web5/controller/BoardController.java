@@ -113,6 +113,7 @@ public class BoardController {
     public String write(
             @ModelAttribute BoardDTO boardDTO,
             @RequestParam("upload") MultipartFile upload,
+            // @RequestParam("upload") MultipartFile<List> upload :파일 여러개 올리고 싶을 경우 리스트 형태로
             // @RequestParam("upload")
             //html input 태그의 name명과 동일해야함
             @AuthenticationPrincipal AuthenticatedUser user) {
@@ -270,6 +271,8 @@ public class BoardController {
     	boardService.download(boardNum, uploadPath, response);
     	
     }
+    
+    
     
 
 }

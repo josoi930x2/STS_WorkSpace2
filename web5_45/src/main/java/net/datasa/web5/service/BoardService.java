@@ -33,6 +33,7 @@ import net.datasa.web5.domain.entity.ReplyEntity;
 import net.datasa.web5.repository.BoardRepository;
 import net.datasa.web5.repository.MemberRepository;
 import net.datasa.web5.repository.ReplyRepository;
+import net.datasa.web5.util.FileManager;
 
 
 /* 		[오늘]
@@ -57,6 +58,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final ReplyRepository replyRepository;
+    private final FileManager fileManager;
 
     /**
      * 게시판 글 저장
@@ -76,6 +78,21 @@ public class BoardService {
         log.debug("저장되는 엔티티 : {}", entity);
         //todo : 첨부 파일 처리할 것
         
+        if (upload != null && !upload.isEmpty()) {
+            try {
+                // FileManager의 saveFile 메서드를 사용하여 파일 저장
+                String savedFileName = fileManager.saveFile(uploadPath, upload);
+                
+                // 원래 이름과 저장된 이름을 Entity에 입력
+                entity.setOriginalName(upload.getOriginalFilename());
+                entity.setFileName(savedFileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+   
+        /*     
         if(upload != null && !upload.isEmpty()) {
         	//저장할 경로의 폴더가 없으면 생성
         	File directoryPath = new File(uploadPath);
@@ -108,10 +125,12 @@ public class BoardService {
         		
         	}
         }
+        */
 
         boardRepository.save(entity);
     }
-
+    
+    
     /**
      * 게시글 전체 조회
      * @return 글 목록
