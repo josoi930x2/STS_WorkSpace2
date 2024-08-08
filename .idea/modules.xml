@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.metadata/.plugins/org.eclipse.egit.core/.org.eclipse.egit.core.cmp/.org.eclipse.egit.core.cmp.iml" filepath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.egit.core/.org.eclipse.egit.core.cmp/.org.eclipse.egit.core.cmp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test_ajax.main.iml" filepath="$PROJECT_DIR$/.idea/modules/test_ajax.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web5_45/web5_45.iml" filepath="$PROJECT_DIR$/web5_45/web5_45.iml" />
+    </modules>
+  </component>
+</project>

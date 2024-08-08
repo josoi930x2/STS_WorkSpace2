@@ -66,6 +66,7 @@ public class BoardService {
      * @param uploadPath 파일을 저장할 경로
      * @param upload 업로드된 파일 정보
      */
+
     public void write(BoardDTO boardDTO, String uploadPath, MultipartFile upload) {
         MemberEntity memberEntity = memberRepository.findById(boardDTO.getMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("회원아이디가 없습니다."));
@@ -91,8 +92,7 @@ public class BoardService {
             }
         }
 
-   
-        /*     
+        /*
         if(upload != null && !upload.isEmpty()) {
         	//저장할 경로의 폴더가 없으면 생성
         	File directoryPath = new File(uploadPath);
@@ -384,7 +384,7 @@ public class BoardService {
 	
 		//원래의 파일명을 헤더 정보에 세팅
 		try {
-			response.setHeader("Content-Disposition", 
+			response.setHeader("Content-Disposition",
 					"attachment;filename=" 
 					+ URLEncoder.encode(boardEntity.getOriginalName(), "UTF-8"));
 		}

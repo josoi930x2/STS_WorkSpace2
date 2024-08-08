@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>test_ajax</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/작성.css}" />
+	<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/작성.css}" /> -->
 	<script th:src="@{/js/jquery-3.7.1.min.js}"></script> 
 
 
@@ -29,6 +29,99 @@
 		alert("test1 함수의 뒷부분");
 		
 	}
+	
+	
+	function test2() {
+		console.log("test2 함수 실행됨");
+		//서버의 'Ajaxtest2"경로로 post요청을 보냄. 문자열을 파라미터로.
+		
+		$.ajax({
+			url : 'ajaxtest2',
+			type : 'post',	
+			data : { str : '클라이언트에서 보냄'},
+			
+			success : function() {
+				console.log('success');
+			},
+			
+			error : function() {
+				console.log('success');
+			}
+			
+		});
+	}
+	
+	function test3() {
+		console.log("test3 함수 실행됨");
+		
+			$.ajax({
+				url : 'ajaxtest3',
+				type : 'get',
+				
+				//매개변수 선언
+				success : function(str) {
+					console.log('success', str);
+				},
+				
+				error : function() {
+					console.log('success');
+				}
+				
+			});
+	}
+	
+	function test4() {
+		console.log("test4 함수 실행됨");
+		
+		
+		$.ajax({
+			url : 'ajaxtest4',
+			type : 'post',
+			
+			data : { num1 : $("#num1").val(),
+					 num2 : $("#num2").val()},
+			
+			dataType: 'text', //json
+			//매개변수 선언
+			success : function(msg) {
+				$("#num3").val(msg);
+			},
+			
+			error : function(e) {
+				console.log('계산실패');
+			}
+			
+		});
+	}
+		
+		function test5() {
+			console.log("test5 함수 실행됨");
+			
+			
+			$.ajax({
+				url : 'ajaxtest5',
+				type : 'post',
+				
+				data : { num1 : $("#num1").val(),
+						 num2 : $("#num2").val()},
+				
+				dataType: 'text', //json
+				//매개변수 선언
+				success : function(msg) {
+					$("#num3").val(msg);
+				},
+				
+				error : function(e) {
+					//alert('계산실패');
+					//alert(JSON.stringfy(e));
+					alert(e.responseText);
+				}
+				
+			});
+		
+		}
+	
+	
 	</script>
 
 </head>
@@ -37,10 +130,22 @@
 	<h1>[ Ajax 테스트 1 ]</h1>
 	
 	<p><a href="javascript:test1()">서버로 요청보내기</a></p>
-	<p><a href=""></a></p>
-	<p><a href=""></a></p>
+	<p><a href="javascript:test2()">서버로 문자열 보내기</a></p>
+	<p><a href="javascript:test3()">서버에서 문자열 받기</a></p>
+	<br>
+	<p><a href="javascript:test4()">값 전달하여 계산하기 1</a></p>
+	<p><a href="javascript:test5()">값 전달하여 계산하기 2</a></p>
+		
+		<!-- ID가 num1, num2인 입력란에 숫자를 입력하고, javascript로 읽어서
+		서버로 ajax요청을 보냄.
+		컨트롤러에서 정수 2개를 전달받아 더하기 한 후 계산결과를 리턴.
+		리턴받은 결과를 ID가 num3인 입력란에 넣어서 보여줌 -->
+		
+		<p>
+		<input type="text" id="num1">+
+		<input type="text" id="num2">=
+		<input type="text" id="num3">
+		</p>
 	
-	<p><img th:src="@{/images/hamster.jpg}">이미지 타임리프</p>
-
 </body>
 </html>

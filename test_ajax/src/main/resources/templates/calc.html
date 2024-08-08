@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<title>test_ajax</title>
+	<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/작성.css}" /> -->
+	<script th:src="@{/js/jquery-3.7.1.min.js}"></script> 
+
+    <script>
+    function test6() {
+		alert("test6 함수 실행됨");
+		
+		
+		$.ajax({
+			url : 'ajaxtest6',
+			type : 'post',
+			
+			data : { num1 : $("#num1").val(),
+					 num2 : $("#num2").val(),
+					 op : $("#op").val()},
+			
+			dataType: 'text', //json
+			//매개변수 선언
+			success : function(msg) {
+				$("#num3").val(msg);
+			},
+			
+			error : function(e) {
+				//alert('계산실패');
+				//alert(JSON.stringfy(e));
+				alert(e.responseText);
+			}
+			
+		});
+    }	
+    
+    function test7() {
+		console.log("test7 함수 실행됨");
+		
+		
+		$.ajax({
+			url : 'ajaxtest7',
+			type : 'post',
+			
+			data : { num1 : $("#num1").val(),
+					 num2 : $("#num2").val(),
+					 op : $("#op").val()},
+			
+			dataType: 'text', //json
+			//매개변수 선언
+			success : function(msg) {
+				$("#num3").val(msg);
+			},
+			
+			error : function(e) {
+				//alert('계산실패');
+				//alert(JSON.stringfy(e));
+				alert(e.responseText);
+			}
+			
+		});
+    }	
+		
+    </script>
+</head>
+
+  <body>
+  
+  	<!--/* <p><a href="javascript:test6()"></a></p> */-->
+  	
+    <h1>*계산기*</h1>
+
+    <form method="post">
+      <input type="text" class="num" id="num1" style="width: 80px" />
+      <select id="op">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+      </select>
+      <input type="text" class="num" id="num2" style="width: 80px" />
+      <span> = </span>
+      <input type="text" class="num" id="num3" readonly style="width: 80px" />
+      <input type="button" onclick="test6()" value="계산6" />
+      <input type="button" onclick="test7()" value="계산7" />
+    </form>
+   
+
+</body>
+</html>
