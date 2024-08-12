@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>web3</title>
+</head>
+<body>
+	<h1>[ 수정 ]</h1>
+	
+	<form action="update" method="post">
+		<input type="hidden" name="id" th:value="${person.id}">
+		이름 <input type="text" name="name" th:value="${person.name}" required="required"><br>
+		나이 <input type="number" name="age" th:value="${person.age}" required="required"><br>
+		 	<input type="submit" value="수정하기"><br>
+	</form>
+	
+</body>
+</html>

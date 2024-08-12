@@ -17,6 +17,8 @@
 					location.href = 'delete?boardNum=' + boardNum;
 				}
 			});
+			
+			
 
 			//글 수정
 			$('#updateButton').click(function() {
@@ -66,6 +68,10 @@
 		<td th:text="${board.viewCount}"></td>
 	</tr>
 	<tr>
+		<th>좋아요수</th>
+		<td th:text="${board.likeCount}"></td>
+	</tr>
+	<tr>
 		<th>제목</th>
 		<td th:text="${board.title}"></td>
 	</tr>
@@ -84,6 +90,11 @@
 	<div th:if="${#authentication.name == board.memberId}">
 		<button id="deleteButton" th:data-num="${board.boardNum}">삭제</button>
 		<button id="updateButton" th:data-num="${board.boardNum}">수정</button>
+	
+	<form th:action="@{/board/like}" method="post">
+		<input type="hidden" name="boardNum" th:value="${board.boardNum}">
+		<input type="submit" value="좋아요">
+	</form>
 	</div>
 <br>
 

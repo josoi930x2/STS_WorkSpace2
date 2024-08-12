@@ -26,11 +26,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datasa.web5.domain.dto.BoardDTO;
+import net.datasa.web5.domain.dto.LikesDTO;
 import net.datasa.web5.domain.dto.ReplyDTO;
 import net.datasa.web5.domain.entity.BoardEntity;
+import net.datasa.web5.domain.entity.LikesEntity;
 import net.datasa.web5.domain.entity.MemberEntity;
 import net.datasa.web5.domain.entity.ReplyEntity;
 import net.datasa.web5.repository.BoardRepository;
+import net.datasa.web5.repository.LikesRepository;
 import net.datasa.web5.repository.MemberRepository;
 import net.datasa.web5.repository.ReplyRepository;
 import net.datasa.web5.util.FileManager;
@@ -58,7 +61,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final ReplyRepository replyRepository;
+    private final LikesRepository likesRepository;
     private final FileManager fileManager;
+    
 
     /**
      * 게시판 글 저장
@@ -415,4 +420,41 @@ public class BoardService {
 		}
 		
 	}
+
+
+	public void like(LikesDTO likesDTO) {
+		// TODO Auto-generated method stub
+		 MemberEntity memberEntity = memberRepository.findById(likesDTO.getMemberId())
+	                .orElseThrow(() -> new EntityNotFoundException("사용자 아이디가 없습니다."));
+
+	        BoardEntity boardEntity = boardRepository.findById(likesDTO.getBoardNum())
+	                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
+
+	        //이미 좋아요를 누른 적이 있으면 좋아요를 요청할 수 없도록
+	        if (likesRepository.findByMemberAndBoard(memberEntity, boardEntity).isPresent()) {
+	        	//throw new EntityNotFoundException("좋아요를 할 수 없습니다.");
+	        	
+		        
+		        //게시물의 좋아요 카운트 -1
+		        boardEntity.setLikeCount(boardEntity.getLikeCount() - 1);
+		        boardRepository.save(boardEntity);
+	        }
+	        
+	        LikesEntity entity = LikesEntity.builder()
+	                .board(boardEntity)
+	                .member(memberEntity)
+	                .build();
+	        //좋아요 테이블에 좋아요 저장
+	        likesRepository.save(entity);
+	        
+	        //게시물의 좋아요 카운트 +1
+	        boardEntity.setLikeCount(boardEntity.getLikeCount() + 1);
+	        boardRepository.save(boardEntity);
+		
+		
+	}
+	
+	
+	
+	
 }

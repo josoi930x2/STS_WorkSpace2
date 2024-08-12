@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>삭제결과 보기</title>
+</head>
+<body>
+    <h1>[ 삭제 결과 ]</h1>
+
+    <div th:if="${result}">
+        <p><span th:text="${id}"></span> : 삭제되었습니다.</p>
+    </div>
+
+    <div th:unless="${result}">
+        <p><span th:text="${id}"></span> : 없는 아이디입니다.</p>
+    </div>
+
+</body>
+</html>

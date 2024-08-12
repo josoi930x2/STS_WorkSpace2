@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datasa.web5.domain.dto.BoardDTO;
+import net.datasa.web5.domain.dto.LikesDTO;
 import net.datasa.web5.domain.dto.ReplyDTO;
 import net.datasa.web5.security.AuthenticatedUser;
 import net.datasa.web5.service.BoardService;
@@ -270,6 +270,15 @@ public class BoardController {
     		
     	boardService.download(boardNum, uploadPath, response);
     	
+    }
+    
+    
+    @PostMapping("like")
+    public String like(@ModelAttribute LikesDTO likesDTO
+            , @AuthenticationPrincipal AuthenticatedUser user) {
+        likesDTO.setMemberId(user.getUsername());
+        boardService.like(likesDTO);
+        return "redirect:read?boardNum=" + likesDTO.getBoardNum();
     }
     
     

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<title>test_ajax</title>
+	<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/작성.css}" /> -->
+	<script th:src="@{/js/jquery-3.7.1.min.js}"></script> 
+
+
+	<script>
+	$(document).ready(function() {
+		$("#button1").click(function() {
+			
+			let inputData = {
+					name : $("#name").val(),
+					age : $("#age").val(),		
+					phone : $("#phone").val()		
+			};
+			
+			$.ajax({
+				url : 'input',
+				type: 'post',
+				data : inputData,
+				success: function() {
+					alert("저장되었습니다.");
+				},
+				error : function() {
+					alert("저장실패");
+				}
+
+			});
+			
+		});//button1 이벤트
+			
+			//폼 전송하기
+			$("#button2").click(function() {
+			
+				$.ajax({
+					url : 'input',
+					type: 'post',
+					data : $('#form').serialize(),
+					success: function() {
+						alert("저장되었습니다.");
+					},
+					error : function() {
+						alert("저장실패");
+					}
+				
+				});
+			
+			});
+		
+		
+			$("#button3").click(function() {
+				
+				$.ajax({
+					url : 'getObject',
+					type: 'get',	
+					//text의 경우: {"name":"김철수","age":22,"phone":"010-1111-2222"}
+					dataType : 'json',
+					success: function(res) {
+						//$('#objectOutput').html(res);
+						
+						let txt = `
+						<table>
+							<tr>
+								<th>이름: </th>
+								<td>${res.name}</td>
+							</tr>
+							<tr>
+								<th>나이: </th>
+								<td>${res.age}</td>
+							</tr>
+							<tr>
+								<th>번호: </th>
+								<td>${res.phone}</td>
+							</tr>
+						</table>
+						`;
+						
+						$('#objectOutput').html(txt);
+						
+						//empty : 해당 태그는 유지하고, 태그 안의 내용을 제거
+						//$('#objectOutput').empty();
+
+						//append : 해당 태그안에 내용을 추가, 반복문처럼 덧붙이는 형식 가능
+						//$('#objectOutput').append(txt);
+					},
+					error : function() {
+						alert("저장실패");
+					}
+				
+				});
+			}); //button3 이벤트
+			
+			
+			$("#button4").click(function() {
+				
+				$.ajax({
+					url : 'getList',
+					type: 'get',	
+					dataType : 'json',
+					success: function(res) {
+						//$('#listOutput').html(res);
+						//res는 배열객체, 반복문으로 접근
+						
+						
+						let txt = `
+						<table>
+							<tr>
+								<th>이름: </th>
+								<td>${res.name}</td>
+								
+								<th>나이: </th>
+								<td>${res.age}</td>
+								
+								<th>번호: </th>
+								<td>${res.phone}</td>
+							</tr>
+						</table>
+						`;
+						//인덱스가 3개면 3번 호출됨
+						$(list).each(function(idx, ob) {
+							
+							txt += 
+							`<tr>
+								<td>${idx}</td>
+								<td>${res.name}</td>
+								<td>${res.age}</td>
+								<td>${res.phone}</td>
+							</tr>
+						</table>
+						`;
+						
+						});
+						 
+						txt += `</table>`;
+						$('#listOutput').html(txt);
+						
+					},
+					error : function() {
+						alert("저장실패");
+					}
+				
+				});
+			}); //button4 이벤트
+			
+			
+			$("#button5").click(function() {
+				
+				let ar = ['aaa', 'bbb', 'cccc'];
+				
+				$.ajax({
+					url : 'sendArray',
+					type: 'post',
+					traditional : true,
+					data : {ar : ar},
+					success: function() {
+						alert("전송되었습니다.");
+					},
+					error : function() {
+						alert("전송실패");
+					}
+				
+				});
+			});
+			
+			$("#button6").click(function() {
+				
+				let ar = [{name:'김', age:10, phone:'111'},
+						{name:'이', age:20, phone:'222'}];
+				
+				$.ajax({
+					url : 'sendObjectArray',
+					type: 'post',
+					data : {ar : JSON.stringfy(ar)},
+					success: function() {
+						alert("전송되었습니다.");
+					},
+					error : function(e) {
+						alert(JSON.stringfy(e));
+					}
+				
+				});
+			});
+		
+		
+		
+	});
+	
+	</script>
+
+</head>
+<body>
+
+	<h1>[ Ajax 테스트 2 - 객체 보내기 /받기 ]</h1>
+	
+	<p>1. 서버로 객체보내기</p>
+	
+	<form>
+	이름 : <input type="text" id="name"><br>
+	나이 : <input type="text" id="age"><br>
+	전화 : <input type="text" id="phone"><br>
+			<button type="button" id="button1">저장</button>
+	</form>
+	
+	
+	<p>2. 서버로 객체보내기</p>
+	
+	<form id="form">
+	이름 : <input type="text" name="name"><br>
+	나이 : <input type="text" name="age"><br>
+	전화 : <input type="text" name="phone"><br>
+			<button type="button" id="button2">저장</button>
+	</form>
+	
+	<p>3. 서버로부터 객체 받기</p>
+	<p><button id="button3">받기</button></p>
+	<div id="objectOutput"></div>
+	
+	<p>4. 서버로부터 리스트 받기</p>
+	<p><button id="button4">받기</button></p>
+	<div id="listOutput"></div>
+	
+	<p>5. 서버로 배열 보내기</p>
+	<p><button id="button5">보내기</button></p>
+	
+	<p>6. 서버로부터 객체배열 보내기</p>
+	<p><button id="button6">보내기</button></p>
+	
+</body>
+</html>
