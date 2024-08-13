@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<title>test_ajax</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/작성.css}" />
+	<script th:src="@{/js/jquery-3.7.1.min.js}"></script> 
+
+
+	<script>
+	$(document).ready(function() {
+		//id가 "id"인 객체의 keyup이벤트 처리.
+		//키보드를 눌렀다 때면 id가 "msg"인 곳에 메세지 출력
+		
+		$("#id").keyup(function() {
+			let id = $(this).val();
+			//$("#msg").html(id);
+		
+			if(id.length < 3 || id.length > 10){
+				$('#msg').css('color', 'red');
+				$('#msg').html('id는 3~10자로 입력하세요');
+				$('#submitButton').attr('disabled', true);
+				return;
+			} 
+			
+			$.ajax({
+				url : 'inDuplicate',
+				type: 'post',
+				data : {id : id}, 
+				//아이디가 이미 존재하는 경우 res = true
+				success: function(res) {
+					
+					if(res){
+						//해당 아이디가 존재함. 사용할 수 없음
+						$('#msg').css('color', 'red');
+						$('#msg').html('이미 사용중인 아이디입니다');
+						$('#submitButton').attr('disabled', true);
+					}else {
+						$('#msg').css('color', 'blue');
+						$('#msg').html('사용가능한 아이디입니다.');
+						$('#submitButton').attr('disabled', false);
+					}
+					
+				} 
+
+			});
+			
+		});//bt1 이벤트
+		
+	});	
+		
+	</script>
+	
+</head>
+<body>
+
+	<h1>[ id 중복확인 테스트 ]</h1>
+	
+	<form>
+	id <input type="text" id="id">
+	<span id="msg"></span><br>
+	이름 <input type="text" id="name">
+	<p><button type="submit" id="submitButton">가입</button></p>
+	</form>
+	
+	
+
+	
+</body>
+</html>

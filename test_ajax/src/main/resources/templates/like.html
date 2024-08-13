@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<title>test_ajax</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/작성.css}" />
+	<script th:src="@{/js/jquery-3.7.1.min.js}"></script> 
+
+
+	<script>
+	$(document).ready(function() {
+		//추천 버튼 클릭시 실행
+		$("#bt1").click(function() {
+			//서버로 글번호 (num) 1번을 전달하여 추천하고 
+			//돌아올때 추천수를 가지고 와서 출력
+		
+			$.ajax({
+				url : 'like',
+				type: 'post',
+				data : {num : 1}, //추천할 글번호를 1로 테스트
+				success: function(cnt) {
+					$("#view").val(cnt);
+				},
+				error : function() {
+					alert("저장실패");
+				}
+
+			});
+			
+		});//bt1 이벤트
+		
+	});	
+		
+	</script>
+	
+</head>
+<body>
+	<h1>[ 추천 테스트 ]</h1>
+	
+	<p><button id="bt">추천</button></p>
+	<div id="view">
+		0
+	</div>
+	
+</body>
+</html>

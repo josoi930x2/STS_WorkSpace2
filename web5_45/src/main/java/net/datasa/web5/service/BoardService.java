@@ -38,17 +38,6 @@ import net.datasa.web5.repository.MemberRepository;
 import net.datasa.web5.repository.ReplyRepository;
 import net.datasa.web5.util.FileManager;
 
-
-/* 		[오늘]
-	     * 게시글 쓸 때 파일 첨부
-	     * 게시글 삭제할때 첨부파일 있는 경우 같이 삭제
-	     * 게시글 수정할 때 첨부파일 있는 경우 삭제하고 새로 올림
-	     * 글읽기/수정하기 화면에 기존 첨부파일의 원래이름 출력
-	     * 
-	     * [내일]
-	     * 파일 다운로드 / Ajax 시작
-*/
-
 /**
  * 게시판 관련 서비스
  */
@@ -432,12 +421,7 @@ public class BoardService {
 
 	        //이미 좋아요를 누른 적이 있으면 좋아요를 요청할 수 없도록
 	        if (likesRepository.findByMemberAndBoard(memberEntity, boardEntity).isPresent()) {
-	        	//throw new EntityNotFoundException("좋아요를 할 수 없습니다.");
-	        	
-		        
-		        //게시물의 좋아요 카운트 -1
-		        boardEntity.setLikeCount(boardEntity.getLikeCount() - 1);
-		        boardRepository.save(boardEntity);
+	        	throw new EntityNotFoundException("좋아요를 할 수 없습니다.");
 	        }
 	        
 	        LikesEntity entity = LikesEntity.builder()
