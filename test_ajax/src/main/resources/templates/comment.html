@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>test_ajax</title>
+    
+    <link rel="stylesheet" type="text/css" th:href="@{/css/comment.css}" />
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#inputButton').click(commentInput);
+            list();
+            $(document).on('click', '.deleteButton', deleteButtonClick);
+            $(document).on('click', '.updateButton', updateButtonClick);
+            $('#saveEditButton').click(saveEdit);
+            $('.close').click(closeModal);
+        });
+
+        // 댓글 저장
+        function commentInput() {
+            let name = $("#name").val();
+            let comment = $("#comment").val();
+
+            if (name === '' || comment === '') {
+                alert('이름과 내용을 입력하세요');
+                return;
+            }
+
+            let inputData = {
+                name: name,
+                comment: comment
+            };
+
+            $.ajax({
+                url: 'input',
+                type: 'post',
+                data: inputData,
+                success: function() {
+                    alert("저장되었습니다.");
+                    $("#name").val('');
+                    $("#comment").val('');
+                    list();
+                },
+                error: function() {
+                    alert("저장 실패");
+                }
+            });
+        }
+
+        // 댓글 목록을 가져와서 출력
+        function list() {
+            $.ajax({
+                url: 'list',
+                type: 'get',
+                dataType: 'json',
+                success: function(list) {
+                    let txt = `
+                        <table>
+                            <tr>
+                                <th>번호</th><th>작성자</th><th>내용</th><th></th><th></th>
+                            </tr>`;
+                    $(list).each(function(idx, ob) {
+                        txt += `<tr>
+                                <td>${ob.num}</td>
+                                <td>${ob.name}</td>
+                                <td>${ob.comment}</td>
+                                <td><button class="deleteButton" data-num="${ob.num}">삭제</button></td>
+                                <td><button class="updateButton" data-num="${ob.num}" data-name="${ob.name}" data-comment="${ob.comment}">수정</button></td>
+                            </tr>`;
+                    });
+                    txt += `</table>`;
+                    $('#listOutput').html(txt);
+                }
+            });
+        }
+
+        // 삭제 버튼 클릭 시
+        function deleteButtonClick() {
+            let num = $(this).data('num');
+            
+            $.ajax({
+                url: 'delete',
+                type: 'post',
+                data: { num: num },
+                success: function() {
+                    alert("삭제되었습니다.");
+                    list();
+                },
+                error: function() {
+                    alert("삭제 실패");
+                }
+            });
+        }
+
+        // 수정 버튼 클릭 시
+        function updateButtonClick() {
+            let num = $(this).data('num');
+            let name = $(this).data('name');
+            let comment = $(this).data('comment');
+
+            $('#editNum').val(num);
+            $('#editName').val(name);
+            $('#editComment').val(comment);
+
+            $('#myModal').css('display', 'block');
+        }
+
+        // 모달 창에서 저장 버튼 클릭 시
+        function saveEdit() {
+            let num = $('#editNum').val();
+            let name = $('#editName').val();
+            let comment = $('#editComment').val();
+
+            if (name == '' || comment == '') {
+                alert('이름과 내용을 입력하세요');
+                return;
+            }
+
+            $.ajax({
+                url: 'update',
+                type: 'post',
+                data: {
+                    num: num,
+                    name: name,
+                    comment: comment
+                },
+                success: function() {
+                    alert("수정되었습니다.");
+                    closeModal();
+                    list();
+                },
+                error: function() {
+                    alert("수정 실패");
+                }
+            });
+        }
+
+        // 모달 창 닫기
+        function closeModal() {
+            $('#myModal').css('display', 'none');
+        }
+    </script>
+
+</head>
+<body>
+<h1> [ 댓글달기 테스트 ] </h1>
+
+<!-- 댓글 작성 폼 -->
+<div>
+    <input type="text" id="name" placeholder="작성자명을 입력하세요">
+    <input type="text" id="comment" placeholder="댓글 내용을 입력하세요">
+    <button id="inputButton">저장</button>
+</div>
+
+<div id="listOutput"></div>
+
+<!-- 모달 창 -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <!-- &times; -> HTML에서 곱셈 기호(×)를 나타내는 특수 문자, 보통 웹 페이지에서 닫기 버튼을 표현할 때 사용 -->
+        <input type="hidden" id="editNum">
+        <label for="editName">작성자명:</label>
+        <input type="text" id="editName"><br>
+        <label for="editComment">내용:</label>
+        <input type="text" id="editComment"><br>
+        <button id="saveEditButton">저장</button>
+    </div>
+</div>
+
+</body>
+</html>

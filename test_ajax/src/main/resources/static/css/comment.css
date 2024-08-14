@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+th {
+    background-color: #cccccc;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 10px;
+}
+td {
+    padding: 3px;
+    background-color: #eeeeee;
+    text-align: left;
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 위쪽과 양 옆의 간격을 설정하여 중앙에 위치 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* 너비를 30%로 설정하여 창의 크기 조절*/
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer; /*지정한 요소 위에 마우스 커서가 올라갔을 때 표출할 모양을 지정*/
+}

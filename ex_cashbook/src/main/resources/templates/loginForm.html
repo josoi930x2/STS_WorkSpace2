@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<title>로그인</title>
+	<!-- jQuery 파일 불러오기 -->
+	<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+	<script>
+		$(document).ready(function() {
+			//로그인시 아이디와 비밀번호는 반드시 입력해야 함
+			$('#loginForm').submit(function() {
+				if ($('#id').val() == '' || $('#password').val() == '') {
+					alert('ID와 비밀번호를 입력하세요.');
+					return false;
+				}
+				return true;
+			});
+		});
+	</script>
+</head>
+<body>
+	<h1>[ 로그인 ]</h1>
+
+	<!-- 로그인폼의 아이디 입력란의 name은 WebSecurityConfig에서 지정한 .usernameParameter("id") 부분과 일치해야 함
+		비밀번호 입력란의 name은 .passwordParameter("password") 부분과 일치해야 함 -->
+	<form id="loginForm" th:action="@{/member/login}" method="post">
+		<p>
+			<label>ID</label>
+			<input type="text" name="id" id="id">
+		</p>
+		<p>
+			<label>Password</label>
+			<input type="password" name="password" id="password">
+		</p>
+		<p>
+			<button type="submit">Login</button>
+		</p>
+	</form>
+
+</body>
+</html>

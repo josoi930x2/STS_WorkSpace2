@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<title>cashbook</title>
+	<style>
+		#memo {
+			width: 200px;
+		}
+		th {
+			width : 100px;
+			text-align : left;
+		}
+	</style>
+	<!-- jQuery 파일 불러오기 -->
+	<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+	<script>
+		$(document).ready(function() {
+			//페이지가 로딩된후 가계부 내역 불러오기
+			list();
+			//입력 버튼의 클릭 이벤트 처리
+			$('#inputButton').click(cashbookInput);
+		});
+
+		//가계부 입력
+		function cashbookInput() {
+			//입력한 날짜와 구분, 금액, 내역을 읽어온다
+			let cashbookData = {
+				inputDate : $('#inputDate').val(),
+				type: $('#type').val(),
+				amount: $('#amount').val(),
+				memo : $('#memo').val()
+			};
+
+			$.ajax({
+				url: 'input',
+				type: 'post',
+				data : cashbookData,
+				success: function() {
+					//정상 처리되면 안내 메시지를 출력한다.
+					alert('저장되었습니다.');
+					//입력한 금액과 내역 문자열을 지운다.
+					$('#amount').val('');
+					$('#memo').val('');
+					//변경된 가계부 내역을 다시 불러온다.
+					list();
+				},
+				error : function(e) {
+					alert('저장 실패했습니다.')
+				}
+			});
+		}
+
+		//가계부 목록 출력
+		function list() {
+			$.ajax({
+				url: 'list',
+				type: 'get',
+				success: function(list) {
+					//가계부 출력 영역을 초기화한다.
+					$('#output').empty();
+
+					//서버에서 가져온 목록을 반복문으로 출력한다.
+					//각 행에 "삭제" 버튼을 생성하고 클래스명을 "deleteButton"으로 지정한다.
+					$(list).each(function(i, obj) {
+						let html = `
+							<tr>
+								<td>${obj.inputDate}</td>
+								<td>${obj.type}</td>
+								<td>${obj.amount}</td>
+								<td>${obj.memo}</td>
+								<td><button class="deleteButton" data-num="${obj.infoNum}">삭제</button></td>
+							</tr>
+						`;
+						//생성된 문자열을 출력영역에 표시한다.
+						$('#output').append(html)
+					});
+
+					//새로 생성된 삭제 버튼들에 클릭 이벤트처리를 한다.
+					$('.deleteButton').click(cashbookDelete);
+				},
+				error : function(e) {
+					alert('조회 실패');
+				}
+			});
+		}
+
+		//가계부 내역 삭제
+		function cashbookDelete() {
+			//삭제여부를 묻고 취소를 선택하면 함수를 종료한다.
+			if (!confirm('내역을 삭제하시겠습니까?')) {
+				return;
+			}
+
+			//클릭한 버튼의 "data-num"속성의 값을 읽어온다.
+			// let infoNum = $(this).attr('data-num');
+			let infoNum = $(this).data('num');
+
+			$.ajax({
+				url: 'delete',
+				type: 'post',
+				data: {infoNum: infoNum},
+				success: function() {
+					alert('삭제되었습니다.');
+					//내역을 삭제한 후에는 가계부 목록을 다시 불러온다.
+					list();
+				},
+				error : function() {
+					alert('삭제 실패');
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+	<h1>[ <span th:text="${#authentication.name}"></span>님의 가계부 ]</h1>
+
+	<!-- 가계부 정보 입력 -->
+	<div>
+		<input type="date" id="inputDate">
+		<select id="type">
+			<option value="수입">수입</option>
+			<option value="지출">지출</option>
+		</select>
+		<input type="number" id="amount" placeholder="0">
+		<input type="text" id="memo" placeholder="내역을 입력하세요.">
+		<button id="inputButton">입력</button>
+	</div>
+	<br>
+
+	<!-- 가계부 출력 영역 -->
+	<table>
+		<thead>
+			<tr>
+				<th>날짜</th>
+				<th>구분</th>
+				<th>금액</th>
+				<th>내역</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody id="output">
+			<!-- 가계부 내역 목록 출력영역 -->
+		</tbody>
+	</table>
+</body>
+</html>

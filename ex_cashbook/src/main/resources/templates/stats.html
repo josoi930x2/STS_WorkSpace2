@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<title>cashbook</title>
+	<!-- jQuery 파일 불러오기 -->
+	<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+	<script>
+		$(document).ready(function() {
+			//계산하기 버튼을 클릭하면 실행된다.
+			//서버로 연도와 구분을 전달하여 요청을 보낸다.
+			$('#bt').click(function() {
+				$.ajax({
+					url : 'getTotal',
+					type : 'post',
+					data : {year: $('#year').val(), type: $('#type').val()},
+					success : function(total) {
+						//서버에서 리턴된 합계금액을 지정한 위치에 출력한다.
+						$('#output').html(total + '원');
+					}
+				});
+			});
+		});
+	</script>
+</head>
+<body>
+	<h1>[ <span th:text="${#authentication.name}"></span>님의 수입/지출 내역 통계 ]</h1>
+
+	<!-- 조회 조건 -->
+	<div>
+		연도
+			<select id="year">
+				<option value="2024" selected>2024</option>
+				<option value="2023">2023</option>
+				<option value="2022">2022</option>
+			</select>
+		구분
+			<select id="type">
+				<option value="수입" selected>수입</option>
+				<option value="지출">지출</option>
+			</select>
+			<button type="button" id="bt">계산하기</button>
+	</div>
+
+	<!-- 금액 출력 부분 -->
+	<div>
+		<h1 id="output"></h1>
+	</div>
+</body>
+</html>

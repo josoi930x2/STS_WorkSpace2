@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>cashbook</title>
+</head>
+<body>
+	<h1>[ 가계부 ]</h1>
+
+	<th:block sec:authorize="not isAuthenticated()">
+		<p><a th:href="@{/member/join}">회원가입</a></p>
+		<p><a th:href="@{/member/login}">로그인</a></p>
+	</th:block>
+	<th:block sec:authorize="isAuthenticated()">
+		<p><a th:href="@{/member/logout}">로그아웃</a></p>
+		<p><a th:href="@{/cashbook/view}">가계부 보기</a></p>
+		<p><a th:href="@{/cashbook/stats}">통계</a></p>
+	</th:block>
+
+	<pre>
+		SpringBoot & JPA & Ajax
+		개인 가계부 서비스
+		날짜별 수입, 지출 내역 등록 및 조회, 삭제
+		연도별 수입, 지출 내역 통계
+	</pre>
+
+</body>
+</html>

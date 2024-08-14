@@ -1,0 +1,31 @@
+[ ex_cashbook ]
+
+개인 가계부 예제
+SpringBoot 3.3 / JPA / MySQL 8 / jQuery / Ajax
+
+가입, 로그인, 로그아웃
+가계부 입력, 삭제, 조회, 통계
+
+
+[ 테이블 구조 ]
+
+DROP TABLE IF EXISTS cashbook_info;
+DROP TABLE IF EXISTS cashbook_member;
+
+-- 회원 정보 테이블
+CREATE TABLE cashbook_member (
+	member_id		varchar(30) PRIMARY key,	-- 사용자 아이디
+	member_pw		varchar(100) NOT NULL		-- 로그인 비밀번호
+);
+
+-- 가계부 내역 테이블
+CREATE TABLE cashbook_info (
+	info_num	int auto_increment PRIMARY KEY,		-- 일련번호
+	member_id	varchar(30) NOT NULL,				-- 사용자 아이디
+	TYPE 		varchar(20) NOT NULL,				-- 수입/지출
+	memo 		varchar(1000),						-- 내역
+	amount 		int DEFAULT 0,						-- 금액
+	input_date	date not null, 						-- 작성일
+	constraint foreign key (member_id) references cashbook_member (member_id) on delete cascade
+);
+
